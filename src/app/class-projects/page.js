@@ -167,9 +167,9 @@ export default function Volunteering() {
             Volunteering
           </h1>
           <p className="text-[#DFD0B8] text-xl text-center max-w-3xl mx-auto leading-relaxed">
-            Giving back to the community through education and mentorship. I'm
-            passionate about helping students discover their potential and
-            develop their skills in computer science and mathematics.
+            Giving back to the community through education and mentorship.
+            I&apos;m passionate about helping students discover their potential
+            and develop their skills in computer science and mathematics.
           </p>
         </div>
       </section>
@@ -306,8 +306,8 @@ export default function Volunteering() {
               access to quality learning experiences. Through tutoring and
               teaching, I aim to make computer science more accessible and help
               students build confidence in their abilities. Watching students
-              have their "aha!" moments and seeing them grow academically is
-              incredibly rewarding.
+              have their &quot;aha!&quot; moments and seeing them grow
+              academically is incredibly rewarding.
             </p>
           </div>
         </div>
