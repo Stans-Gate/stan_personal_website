@@ -716,12 +716,12 @@ export default function Home() {
                   About
                 </h2>
                 <p className="text-white text-lg leading-relaxed tracking-wide">
-                  I'm a junior at University of Pennsylvania completing my BSE
-                  in Computer Science and MSE in Robotics. I'm passionate about
-                  full-stack development, building reliable and scalable system,
-                  and creative user interface. My academic interest lies in
-                  machine learning, computer vision, computer graphics, and
-                  optimization.
+                  I&apos;m a junior at University of Pennsylvania completing my
+                  BSE in Computer Science and MSE in Robotics. I&apos;m
+                  passionate about full-stack development, building reliable and
+                  scalable system, and creative user interface. My academic
+                  interest lies in machine learning, computer vision, computer
+                  graphics, and optimization.
                 </p>
               </div>
             </div>
