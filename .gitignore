@@ -51,10 +51,11 @@ next-env.d.ts
 Thumbs.db
 
 # Large media files
-/public/**/*.mp4
-/public/**/*.mp3
-/public/**/*.mov
-/public/**/*.avi
-# Or specific files
-/public/audio.mp3
-/public/projects/*/**.mp4
+# /public/**/*.mp4
+# /public/**/*.mp3
+# /public/**/*.mov
+# /public/**/*.avi
+# # Or specific files
+# /public/audio.mp3
+# /public/projects/*/**.mp4
+/public/projects/minecraft/minecraft.mp4
