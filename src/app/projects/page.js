@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import {
   ExternalLink,
   Github,
@@ -19,21 +20,27 @@ import {
 } from "lucide-react";
 
 export default function Project() {
+  const pathname = usePathname();
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [navExpanded, setNavExpanded] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const navLinks = [
     { id: "home", label: "Home", isSection: false, href: "/" },
-    { id: "tool", label: "Tool", isSection: false, href: "/#tool" },
     { id: "projects", label: "Project", isSection: false, href: "/projects" },
     {
-      id: "contact",
-      label: "Volunteering",
+      id: "miscellaneous",
+      label: "Miscellaneous",
       isSection: false,
       href: "/class-projects",
+    },
+    {
+      id: "resume",
+      label: "Resume",
+      isSection: false,
+      href: "/Stan_resume_1221.pdf",
+      download: true,
     },
   ];
 
@@ -639,7 +646,7 @@ export default function Project() {
                     onClick={() =>
                       setCurrentImageIndex(
                         (currentImageIndex - 1 + project.gallery.length) %
-                          project.gallery.length
+                        project.gallery.length
                       )
                     }
                     className="absolute left-4 top-1/2 -translate-y-1/2 bg-[#222831]/80 p-3 rounded-full hover:bg-[#948979] transition-colors"
@@ -661,11 +668,10 @@ export default function Project() {
                       <button
                         key={idx}
                         onClick={() => setCurrentImageIndex(idx)}
-                        className={`w-2 h-2 rounded-full transition-all ${
-                          idx === currentImageIndex
-                            ? "bg-[#948979] w-8"
-                            : "bg-white/50 hover:bg-white/80"
-                        }`}
+                        className={`w-2 h-2 rounded-full transition-all ${idx === currentImageIndex
+                          ? "bg-[#948979] w-8"
+                          : "bg-white/50 hover:bg-white/80"
+                          }`}
                         aria-label={`View image ${idx + 1}`}
                       />
                     ))}
@@ -818,78 +824,47 @@ export default function Project() {
 
   return (
     <div className="min-h-screen bg-[#222831]">
-      {/* Pokemon Ball Navbar */}
-      <nav className="fixed top-8 right-8 z-50">
-        <div className="relative">
-          {navExpanded && (
-            <div
-              className="bg-white rounded-3xl shadow-2xl px-8 py-4 flex items-center gap-8"
-              style={{
-                animation: "expandNav 0.3s ease-out forwards",
-                minWidth: "500px",
-              }}
-            >
-              <button
-                onClick={() => setNavExpanded(false)}
-                className="w-16 h-16 rounded-full flex-shrink-0 overflow-hidden hover:scale-110 transition-transform duration-200"
-              >
-                <img
-                  src="/pokeball.png"
-                  alt="Pokeball"
-                  className="w-full h-full object-cover"
-                />
-              </button>
-              <div className="flex gap-8 relative">
-                {navLinks.map((link) => (
-                  <div key={link.id} className="relative">
-                    <a
-                      href={link.href}
-                      className="text-black font-medium hover:text-gray-600 transition-colors"
-                      onClick={() => setNavExpanded(false)}
-                    >
-                      {link.label}
-                    </a>
-                  </div>
-                ))}
-              </div>
+      {/* Standard Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#222831] border-b border-white">
+        <div className="max-w-7xl mx-auto px-8 py-4">
+          <div className="flex items-center justify-between">
+            {/* Name on the left */}
+            <div className="text-white font-semibold text-lg">
+              Stan Chen
             </div>
-          )}
-          {!navExpanded && (
-            <button
-              onClick={() => setNavExpanded(true)}
-              className="w-20 h-20 rounded-full overflow-hidden hover:scale-110 transition-transform duration-200 shadow-lg"
-            >
-              <img
-                src="/pokeball.png"
-                alt="Pokeball"
-                className="w-full h-full object-cover"
-              />
-            </button>
-          )}
+
+            {/* Nav items on the right */}
+            <div className="flex items-center gap-8">
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href;
+                return (
+                  <a
+                    key={link.id}
+                    href={link.isSection ? `#${link.id}` : link.href}
+                    download={link.download ? "Stan_Chen_Resume.pdf" : undefined}
+                    className={`text-white text-sm font-medium px-3 py-1.5 rounded transition-all duration-300 ${isActive
+                      ? "shadow-[0_0_15px_rgba(255,255,255,0.4)]"
+                      : "hover:text-white/80 hover:shadow-[0_0_12px_rgba(255,255,255,0.3)]"
+                      }`}
+                    style={isActive ? { textShadow: "0 0 8px rgba(255, 255, 255, 0.6), 0 0 15px rgba(255, 255, 255, 0.4)" } : {}}
+                  >
+                    {link.label}
+                  </a>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </nav>
-      <style jsx global>{`
-        @keyframes expandNav {
-          from {
-            width: 80px;
-            opacity: 0;
-          }
-          to {
-            width: 500px;
-            opacity: 1;
-          }
-        }
-      `}</style>
       <link
         href="https://fonts.googleapis.com/css2?family=Rock+Salt&family=Racing+Sans+One&display=swap"
         rel="stylesheet"
       />
       {/* Header */}
-      <header className="pt-20 pb-12 px-8">
+      <header className="pt-24 pb-12 px-8">
         <div className="max-w-7xl mx-auto">
           <h1
             className="text-white text-5xl mb-4"
-            style={{ fontFamily: "Rock Salt, cursive" }}
           >
             My Projects
           </h1>
@@ -907,11 +882,10 @@ export default function Project() {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-6 py-3 rounded-full whitespace-nowrap transition-all font-medium ${
-                  selectedCategory === cat.id
-                    ? "bg-[#948979] text-white shadow-lg"
-                    : "bg-[#222831] text-[#DFD0B8] hover:bg-[#948979]/50 hover:text-white"
-                }`}
+                className={`px-6 py-3 rounded-full whitespace-nowrap transition-all font-medium ${selectedCategory === cat.id
+                  ? "bg-[#948979] text-white shadow-lg"
+                  : "bg-[#222831] text-[#DFD0B8] hover:bg-[#948979]/50 hover:text-white"
+                  }`}
               >
                 {cat.label}
               </button>

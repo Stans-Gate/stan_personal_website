@@ -1,22 +1,28 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import ToolList from "./ToolList";
 import { ShootingStars } from "@/components/ui/shooting-stars";
 import { StarsBackground } from "@/components/ui/stars-background";
 
 export default function Home() {
-  const [navExpanded, setNavExpanded] = useState(false);
-  const [hoveredLink, setHoveredLink] = useState(null);
+  const pathname = usePathname();
 
   const navLinks = [
     { id: "home", label: "Home", isSection: true },
-    { id: "tool", label: "Tool", isSection: true },
     { id: "projects", label: "Project", isSection: false, href: "/projects" },
     {
-      id: "contact",
-      label: "Volunteering",
+      id: "miscellaneous",
+      label: "Miscellaneous",
       isSection: false,
       href: "/class-projects",
+    },
+    {
+      id: "resume",
+      label: "Resume",
+      isSection: false,
+      href: "/Stan_resume_1221.pdf",
+      download: true,
     },
   ];
 
@@ -110,98 +116,56 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#222831]">
-      {/* Pokemon Ball Navbar - Now Sticky */}
-      <nav className="fixed top-8 left-8 z-50">
-        <div className="relative">
-          {/* Expanded Navbar */}
-          {navExpanded && (
-            <div
-              className="bg-white rounded-3xl shadow-2xl px-8 py-4 flex items-center gap-8"
-              style={{
-                animation: "expandNav 0.3s ease-out forwards",
-                minWidth: "500px",
-              }}
-            >
-              {/* Pokemon Ball Icon (stays visible when expanded) */}
-              <button
-                onClick={() => setNavExpanded(false)}
-                className="w-16 h-16 rounded-full flex-shrink-0 overflow-hidden hover:scale-110 transition-transform duration-200"
-              >
-                <img
-                  src="/pokeball.png"
-                  alt="Pokeball"
-                  className="w-full h-full object-cover"
-                />
-              </button>
+    <div className="min-h-screen bg-[#222831] relative">
+      {/* Starry Background - Full Page */}
+      <ShootingStars
+        starColor="#DFD0B8"
+        trailColor="#948979"
+        starHeight={2}
+        starWidth={20}
+        minSpeed={5}
+        maxSpeed={15}
+        className="z-0 fixed inset-0"
+      />
+      <StarsBackground starDensity={0.01} className="opacity-50 z-0 fixed inset-0" />
 
-              {/* Nav Links */}
-              <div className="flex gap-8 relative">
-                {navLinks.map((link) => (
-                  <div
+      {/* Standard Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#222831] border-b border-white">
+        <div className="max-w-7xl mx-auto px-8 py-4">
+          <div className="flex items-center justify-between">
+            {/* Name on the left */}
+            <div className="text-white font-semibold text-lg">
+              Stan Chen
+            </div>
+
+            {/* Nav items on the right */}
+            <div className="flex items-center gap-8">
+              {navLinks.map((link) => {
+                const isActive = link.isSection
+                  ? pathname === "/" && link.id === "home" // Home link is active on home page
+                  : pathname === link.href;
+                return (
+                  <a
                     key={link.id}
-                    className="relative"
-                    onMouseEnter={() => setHoveredLink(link.id)}
-                    onMouseLeave={() => setHoveredLink(null)}
+                    href={link.isSection ? `#${link.id}` : link.href}
+                    download={link.download ? "Stan_Chen_Resume.pdf" : undefined}
+                    className={`text-white text-sm font-medium px-3 py-1.5 rounded transition-all duration-300 ${isActive
+                      ? "shadow-[0_0_15px_rgba(255,255,255,0.4)]"
+                      : "hover:text-white/80 hover:shadow-[0_0_12px_rgba(255,255,255,0.3)]"
+                      }`}
+                    style={isActive ? { textShadow: "0 0 8px rgba(255, 255, 255, 0.6), 0 0 15px rgba(255, 255, 255, 0.4)" } : {}}
                   >
-                    <a
-                      href={link.isSection ? `#${link.id}` : link.href}
-                      className="text-black font-medium hover:text-gray-600 transition-colors"
-                      onClick={() => setNavExpanded(false)}
-                    >
-                      {link.label}
-                    </a>
-                  </div>
-                ))}
-              </div>
+                    {link.label}
+                  </a>
+                );
+              })}
             </div>
-          )}
-
-          {/* Collapsed Pokemon Ball Button */}
-          {!navExpanded && (
-            <div className="relative">
-              <button
-                onClick={() => setNavExpanded(true)}
-                className="w-20 h-20 rounded-full overflow-hidden hover:scale-110 transition-transform duration-200"
-              >
-                <img
-                  src="/pokeball.png"
-                  alt="Pokeball"
-                  className="w-full h-full object-cover"
-                />
-              </button>
-
-              {/* Static Arrow Pointer */}
-              <div className="absolute left-24 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                {/* Your PNG Arrow */}
-                <img
-                  src="/arrow.png"
-                  alt="Arrow"
-                  className="w-16 h-16 object-contain"
-                />
-
-                {/* Text */}
-                <div
-                  className="text-white text-lg font-black whitespace-nowrap"
-                  style={{
-                    fontFamily:
-                      "'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', cursive",
-                    textShadow:
-                      "3px 3px 0px rgba(0,0,0,0.3), -1px -1px 0px rgba(255,215,0,0.3)",
-                    letterSpacing: "1px",
-                    transform: "rotate(-5deg)",
-                  }}
-                >
-                  Click the Pokéball!
-                </div>
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </nav>
 
       {/* Music Player - Fixed Top Right */}
-      <div className="fixed top-8 right-8 z-50">
+      <div className="fixed top-20 right-8 z-50">
         {/* CHANGE MUSIC FILE PATH HERE - Replace with your audio file path */}
         <audio ref={audioRef} src="/audio.mp3" />
 
@@ -211,9 +175,8 @@ export default function Home() {
               width="128"
               height="128"
               viewBox="0 0 128 128"
-              className={`duration-500 border-4 rounded-full shadow-md border-zinc-400 border-spacing-5 transition-all ${
-                isPlaying ? "animate-[spin_3s_linear_infinite]" : ""
-              }`}
+              className={`duration-500 border-4 rounded-full shadow-md border-zinc-400 border-spacing-5 transition-all ${isPlaying ? "animate-[spin_3s_linear_infinite]" : ""
+                }`}
             >
               <svg>
                 <rect width="128" height="128" fill="black"></rect>
@@ -268,11 +231,10 @@ export default function Home() {
           <div className="z-30 flex flex-col w-40 h-20 transition-all duration-300 bg-white shadow-md group-hover/he:h-40 group-hover/he:w-72 rounded-2xl shadow-zinc-400">
             <div className="flex flex-row w-full h-0 group-hover/he:h-20">
               <div
-                className={`relative flex items-center justify-center w-24 h-24 group-hover/he:-top-6 group-hover/he:-left-4 opacity-0 group-hover/he:opacity-100 transition-all duration-100 ${
-                  isPlaying
-                    ? "group-hover/he:animate-[spin_3s_linear_infinite]"
-                    : ""
-                }`}
+                className={`relative flex items-center justify-center w-24 h-24 group-hover/he:-top-6 group-hover/he:-left-4 opacity-0 group-hover/he:opacity-100 transition-all duration-100 ${isPlaying
+                  ? "group-hover/he:animate-[spin_3s_linear_infinite]"
+                  : ""
+                  }`}
               >
                 <svg
                   width="96"
@@ -506,17 +468,6 @@ export default function Home() {
 
       {/* Animations */}
       <style jsx global>{`
-        @keyframes expandNav {
-          from {
-            width: 80px;
-            opacity: 0;
-          }
-          to {
-            width: 500px;
-            opacity: 1;
-          }
-        }
-
         @keyframes fadeIn {
           from {
             opacity: 0;
@@ -551,37 +502,31 @@ export default function Home() {
         id="home"
         className="relative 90vh px-8 flex items-start pt-40 justify-center mb-20 overflow-hidden"
       >
-        <ShootingStars
-          starColor="#DFD0B8"
-          trailColor="#948979"
-          starHeight={2}
-          starWidth={20}
-          minSpeed={5}
-          maxSpeed={15}
-          className="z-0"
-        />
-        <StarsBackground starDensity={0.01} className="opacity-50 z-0" />
-        <div className="max-w-6xl mx-auto w-full">
+        <div className="max-w-6xl mx-auto w-full relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
             {/* Left Column - Image, Name, and Social Links */}
-            <div className="flex flex-col items-center md:items-start relative z-20">
-              {/* Greeting */}
-              <h1
-                className="text-[#ffffff] text-6xl mb-8"
-                style={{ fontFamily: "Rock Salt, cursive" }}
-              >
-                Stan Chen
-              </h1>
-
+            <div className="flex flex-col items-center md:items-start relative z-10">
               {/* Profile Image */}
-              <div className="mb-8">
-                <div className="w-90 h-90 rounded-full overflow-hidden border-4 border-[#948979] shadow-xl">
+              <div className="mb-6">
+                <div className="w-90 h-90 rounded-full overflow-hidden border-4 border-white/60 shadow-xl">
                   <img
                     src="/stan.png"
                     alt="Stan"
                     className="w-full h-full object-cover"
                   />
                 </div>
+              </div>
+
+              {/* Name and Info */}
+              <div className="mb-6 text-center md:text-left">
+                <h1 className="text-white text-3xl font-bold mb-1">Stan Chen</h1>
+                <p className="text-white/80 text-lg mb-1">CS & Robo @ Penn</p>
+                <a
+                  href="mailto:chenstan@seas.upenn.edu"
+                  className="text-white/70 text-base hover:text-white transition-colors"
+                >
+                  chenstan@seas.upenn.edu
+                </a>
               </div>
 
               {/* Social Links */}
@@ -593,7 +538,7 @@ export default function Home() {
                     href="https://www.linkedin.com/in/stan-chen-87468a272/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative overflow-hidden flex justify-center items-center w-14 h-14 rounded-full text-gray-700 bg-[#948979] transition-all duration-300 ease-in-out hover:shadow-lg group-hover:text-white"
+                    className="relative overflow-hidden flex justify-center items-center w-14 h-14 rounded-full text-gray-700 bg-white transition-all duration-300 ease-in-out hover:shadow-lg group-hover:text-white"
                   >
                     <div className="filled absolute bottom-0 left-0 w-full h-0 bg-[#0274b3] transition-all duration-300 ease-in-out group-hover:h-full rounded-full"></div>
                     <svg
@@ -622,7 +567,7 @@ export default function Home() {
                     href="https://github.com/Stans-Gate"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative overflow-hidden flex justify-center items-center w-14 h-14 rounded-full text-gray-700 bg-[#948979] transition-all duration-300 ease-in-out hover:shadow-lg group-hover:text-white"
+                    className="relative overflow-hidden flex justify-center items-center w-14 h-14 rounded-full text-gray-700 bg-white transition-all duration-300 ease-in-out hover:shadow-lg group-hover:text-white"
                   >
                     <div className="filled absolute bottom-0 left-0 w-full h-0 bg-[#24262a] transition-all duration-300 ease-in-out group-hover:h-full rounded-full"></div>
                     <svg
@@ -648,8 +593,8 @@ export default function Home() {
                   <a
                     data-social="email"
                     aria-label="Email"
-                    href="mailto:schen473@hotmail.com"
-                    className="relative overflow-hidden flex justify-center items-center w-14 h-14 rounded-full text-gray-700 bg-[#948979] transition-all duration-300 ease-in-out hover:shadow-lg group-hover:text-white"
+                    href="mailto:chenstan@seas.upenn.edu"
+                    className="relative overflow-hidden flex justify-center items-center w-14 h-14 rounded-full text-gray-700 bg-white transition-all duration-300 ease-in-out hover:shadow-lg group-hover:text-white"
                   >
                     <div className="filled absolute bottom-0 left-0 w-full h-0 transition-all duration-300 ease-in-out group-hover:h-full rounded-full bg-[#D44638]"></div>
                     <svg
@@ -671,58 +616,77 @@ export default function Home() {
                     Email
                   </div>
                 </li>
-                <li className="icon-content relative group">
-                  <a
-                    data-social="resume"
-                    aria-label="Download Resume"
-                    href="/resume.pdf"
-                    download="Stan_Chen_Resume.pdf"
-                    className="relative overflow-hidden flex justify-center items-center w-14 h-14 rounded-full text-gray-700 bg-[#948979] transition-all duration-300 ease-in-out hover:shadow-lg group-hover:text-white"
-                  >
-                    <div className="filled absolute bottom-0 left-0 w-full h-0 bg-[#b68d40] transition-all duration-300 ease-in-out group-hover:h-full rounded-full"></div>
-                    <svg
-                      xmlSpace="preserve"
-                      viewBox="0 0 16 16"
-                      className="bi bi-file-earmark-text relative z-10 w-8 h-8"
-                      fill="currentColor"
-                      height="16"
-                      width="16"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fill="currentColor"
-                        d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5"
-                      />
-                      <path
-                        fill="currentColor"
-                        d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"
-                      />
-                    </svg>
-                  </a>
-                  <div className="tooltip absolute top-16 left-1/2 transform -translate-x-1/2 text-white px-2 py-1 rounded opacity-0 invisible text-sm transition-all duration-300 bg-[#b68d40] group-hover:opacity-100 group-hover:visible group-hover:top-[70px]">
-                    Resume
-                  </div>
-                </li>
               </ul>
             </div>
 
-            {/* Right Column - Intro Text */}
+            {/* Right Column - Biography and Education */}
             <div className="flex items-center">
-              <div className="relative bg-[#393E46] p-10 shadow-2xl border-l-4 border-r-4 border-[#DFD0B8]">
-                <h2
-                  className="text-[#DFD0B8] text-4xl font-bold mb-6"
-                  style={{ fontFamily: "Rock Salt, cursive" }}
-                >
-                  About
-                </h2>
-                <p className="text-white text-lg leading-relaxed tracking-wide">
-                  I&apos;m a junior at University of Pennsylvania completing my
-                  BSE in Computer Science and MSE in Robotics. I&apos;m
-                  passionate about full-stack development, building reliable and
-                  scalable system, and creative user interface. My academic
-                  interest lies in machine learning, computer vision, computer
-                  graphics, and optimization.
-                </p>
+              <div className="space-y-8">
+                {/* Biography Section */}
+                <div>
+                  <h2 className="text-white text-2xl font-semibold mb-3">
+                    Biography
+                  </h2>
+                  <p className="text-white/90 text-base leading-relaxed">
+                    I&apos;m a junior at University of Pennsylvania passionate about full-stack development, building reliable and scalable systems, and creative user interfaces. My academic interests lie in machine learning, computer vision, computer graphics, and optimization.
+                  </p>
+                </div>
+
+                {/* Education Section */}
+                <div>
+                  <h2 className="text-white text-2xl font-semibold mb-6">
+                    Education
+                  </h2>
+                  <div className="space-y-5">
+                    {/* B.S.E. Degree */}
+                    <div className="flex items-center gap-5">
+                      <div className="flex-shrink-0 w-25 h-25 flex items-center justify-center bg-white rounded-lg p-2 shadow-lg">
+                        <img
+                          src="/pennengineering.png"
+                          alt="Penn Engineering"
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-white text-base mb-0.5">
+                          B.S.E. in Computer and Information Science
+                        </h3>
+                        <p className="text-white text-sm">
+                          University of Pennsylvania
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="h-px bg-white my-4"></div>
+
+                    {/* M.S.E. Degree */}
+                    <div className="flex items-center gap-5">
+                      <div className="flex-shrink-0 w-25 h-25 flex items-center justify-center bg-white rounded-lg p-2 shadow-lg">
+                        <img
+                          src="/grasp.png"
+                          alt="GRASP Laboratory"
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-white text-base mb-0.5">
+                          M.S.E. in Robotics
+                        </h3>
+                        <p className="text-white text-sm">
+                          University of Pennsylvania GRASP Laboratory
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Graduation Date */}
+                    <div className="pt-3 mt-4 border-t border-white">
+                      <p className="text-white text-sm">
+                        Expected Graduation: <span className="font-medium text-white">May 2027</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -730,66 +694,167 @@ export default function Home() {
       </section>
 
       {/* 3. Tools Section */}
-      <section id="tool" className="60vh px-8 pt-16">
-        <h1
-          className="text-white text-5xl mb-14"
-          style={{ fontFamily: "Racing Sans One" }}
-        >
-          My Toolkit
-        </h1>
-        <ToolList />
+      <section id="tool" className="60vh px-8 pt-16 relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <h1
+            className="text-white text-5xl mb-14"
+            style={{ fontFamily: "Racing Sans One" }}
+          >
+            My Toolkit
+          </h1>
+          <ToolList />
+        </div>
       </section>
 
-      {/* 4. Footer */}
-      <footer className="relative mt-20">
-        {/* Wavy SVG Divider */}
-        <div className="relative">
-          <svg
-            className="w-full h-24 md:h-32"
-            viewBox="0 0 1440 120"
-            preserveAspectRatio="none"
-            xmlns="http://www.w3.org/2000/svg"
+      {/* 4. Selected Projects Section */}
+      <section className="px-8 py-16 relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <h1
+            className="text-white text-5xl mb-14"
+            style={{ fontFamily: "Racing Sans One" }}
           >
-            {/* Layered waves for depth */}
-            <path
-              d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,64C960,75,1056,85,1152,80C1248,75,1344,53,1392,42.7L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"
-              fill="#DFD0B8"
-              fillOpacity="0.2"
-            />
-            <path
-              d="M0,32L48,42.7C96,53,192,75,288,80C384,85,480,75,576,64C672,53,768,43,864,48C960,53,1056,75,1152,80C1248,85,1344,75,1392,69.3L1440,64L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"
-              fill="#DFD0B8"
-              fillOpacity="0.4"
-            />
-            <path
-              d="M0,96L48,90.7C96,85,192,75,288,74.7C384,75,480,85,576,90.7C672,96,768,96,864,90.7C960,85,1056,75,1152,74.7C1248,75,1344,85,1392,90.7L1440,96L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"
-              fill="#DFD0B8"
-            />
-          </svg>
-        </div>
+            Selected Projects
+          </h1>
 
-        {/* Footer Content */}
-        <div className="bg-[#DFD0B8] py-12 px-8">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-              <div>
-                <h3
-                  className="text-2xl font-bold text-[#393E46] mb-4"
-                  style={{ fontFamily: "Rock Salt, cursive" }}
-                >
-                  Stan Chen
-                </h3>
-                <p className="text-[#393E46]/80">
-                  Full-stack developer & robotics enthusiast
-                </p>
+          <div className="space-y-6 mb-12">
+            {/* Digital Currency Platform */}
+            <div className="group cursor-pointer" onClick={() => window.location.href = '/projects'}>
+              <div className="flex flex-col md:flex-row gap-6 border-b border-white/10 pb-6 hover:border-white/30 transition-all duration-300">
+                <div className="w-full md:w-1/3 flex-shrink-0">
+                  <div className="aspect-video overflow-hidden bg-black rounded-lg">
+                    <img
+                      src="/projects/crypto/c1.png"
+                      alt="Digital Currency Platform"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                  </div>
+                </div>
+                <div className="flex-1 flex flex-col justify-center">
+                  <h3 className="text-white text-2xl font-semibold mb-3">
+                    Digital Currency Platform
+                  </h3>
+                  <p className="text-white/70 text-base mb-4">
+                    A RESTful cryptocurrency data platform providing real-time market data aggregation, portfolio tracking, and multi-exchange kline analysis.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-3 py-1 bg-white/10 text-white/80 text-sm rounded">
+                      Spring Boot
+                    </span>
+                    <span className="px-3 py-1 bg-white/10 text-white/80 text-sm rounded">
+                      MySQL
+                    </span>
+                    <span className="px-3 py-1 bg-white/10 text-white/80 text-sm rounded">
+                      RESTful API
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="border-t border-[#393E46]/20 pt-6 text-center">
-              <p className="text-[#393E46]/70 text-sm">
-                © 2025 Stan Chen. Built with Next.js
-              </p>
+            {/* Neurablend */}
+            <div className="group cursor-pointer" onClick={() => window.location.href = '/projects'}>
+              <div className="flex flex-col md:flex-row gap-6 border-b border-white/10 pb-6 hover:border-white/30 transition-all duration-300">
+                <div className="w-full md:w-1/3 flex-shrink-0">
+                  <div className="aspect-video overflow-hidden bg-black rounded-lg">
+                    <img
+                      src="/projects/neurablend/n1.png"
+                      alt="Neurablend"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                  </div>
+                </div>
+                <div className="flex-1 flex flex-col justify-center">
+                  <h3 className="text-white text-2xl font-semibold mb-3">
+                    Neurablend
+                  </h3>
+                  <p className="text-white/70 text-base mb-4">
+                    AI-powered learning platform designed to create personalized study plans and gamified study guide for students.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-3 py-1 bg-white/10 text-white/80 text-sm rounded">
+                      React
+                    </span>
+                    <span className="px-3 py-1 bg-white/10 text-white/80 text-sm rounded">
+                      FastAPI
+                    </span>
+                    <span className="px-3 py-1 bg-white/10 text-white/80 text-sm rounded">
+                      AI
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
+
+            {/* Game Hub */}
+            <div className="group cursor-pointer" onClick={() => window.location.href = '/projects'}>
+              <div className="flex flex-col md:flex-row gap-6 border-b border-white/10 pb-6 hover:border-white/30 transition-all duration-300">
+                <div className="w-full md:w-1/3 flex-shrink-0">
+                  <div className="aspect-video overflow-hidden bg-black rounded-lg">
+                    <img
+                      src="/projects/game/g1.png"
+                      alt="Game Hub"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                  </div>
+                </div>
+                <div className="flex-1 flex flex-col justify-center">
+                  <h3 className="text-white text-2xl font-semibold mb-3">
+                    Game Hub
+                  </h3>
+                  <p className="text-white/70 text-base mb-4">
+                    A demo website showcasing a game library using the RAWG Video Games Database API with extensive filtering and search capabilities.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-3 py-1 bg-white/10 text-white/80 text-sm rounded">
+                      React
+                    </span>
+                    <span className="px-3 py-1 bg-white/10 text-white/80 text-sm rounded">
+                      TypeScript
+                    </span>
+                    <span className="px-3 py-1 bg-white/10 text-white/80 text-sm rounded">
+                      ChakraUI
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* View More Link */}
+          <div className="text-center">
+            <a
+              href="/projects"
+              className="inline-flex items-center gap-2 text-white text-lg font-medium hover:text-white/80 transition-colors group"
+            >
+              View All Projects
+              <svg
+                className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Footer */}
+      <footer className="relative mt-20 z-10 border-t border-white/10">
+        <div className="bg-white py-10 px-8">
+          <div className="max-w-4xl mx-auto text-center">
+            <p className="text-gray-600 text-sm mb-2">
+              © 2025 Stan Chen
+            </p>
+            <p className="text-gray-400 text-xs">
+              Built with Next.js
+            </p>
           </div>
         </div>
       </footer>
