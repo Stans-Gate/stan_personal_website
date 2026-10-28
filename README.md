@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Stan Chen · Pixel Dungeon Portfolio
 
-## Getting Started
+A playable 2D pixel-art room: glass flasks hang from chains, each holding one project or role, and a lectern holds the contact links. Built from the spec in [website_update.md](website_update.md).
 
-First, run the development server:
+- **Stack:** Vite + TypeScript + Canvas 2D, with DOM overlays for the panels and HUD. No runtime dependencies.
+- **Content:** everything lives in [src/content.ts](src/content.ts). Add an object to `entries` and a new flask appears, laid out automatically by category.
+- **List view:** [list.html](list.html) is plain static HTML generated from the same content at build time (no JavaScript needed).
+- **Art and sound:** all sprites are original and drawn in code at boot ([src/sprites.ts](src/sprites.ts), [src/scene.ts](src/scene.ts)); sound is synthesized with WebAudio, so there are no sprite or audio files to download.
+
+## Develop
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:5173
+npm run build    # type-check, then build to dist/
+npm run preview  # serve the production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Controls
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+| Action | Keys |
+| --- | --- |
+| Move | ← → or A / D |
+| Jump | Space, ↑ or W (hold for higher, press again in the air to double jump) |
+| Dodge roll | Shift (or K / L) |
+| Drop through a wooden platform | ↓ or S + Jump |
+| Inspect | E or Enter |
+| Close panel | Esc, E, or click outside |
+| Cycle flasks | Tab / Shift+Tab |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Ledges are climbed automatically when you just miss the top. Upper flasks are only in reach from the platforms. On touch screens: on-screen buttons, or tap a flask or the lectern to walk there and open it.
 
-## Learn More
+## Credits
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Cave backdrop: ["Cavernous"](https://opengameart.org/content/cavernous-background) by Spring Spring (CC0). Fonts: Press Start 2P and VT323 (Google Fonts, SIL Open Font License).
