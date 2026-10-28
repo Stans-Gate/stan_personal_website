@@ -1,0 +1,10 @@
+{
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "redirects": [
+    { "source": "/projects", "destination": "/list.html", "permanent": false },
+    { "source": "/class-projects", "destination": "/list.html", "permanent": false },
+    { "source": "/list", "destination": "/list.html", "permanent": false }
+  ]
+}
